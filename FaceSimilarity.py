@@ -102,7 +102,7 @@ def main():
         for (x1,y1,width,height) in face:
             cv2.rectangle(frame, (x1, y1), (x1+width , y1+height), (255, 0, 0), 2)
 
-        distance = similar(frame,"Foto_Ketua_BDC_Hansen Idden.png",model_name='ArcFace')
+        distance = similar(frame,mod.get_weights_home()+"/Hansen Idden.png",model_name='Facenet')
         print(distance)
         cv2.imshow('frame',frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):

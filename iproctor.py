@@ -8,13 +8,19 @@ from tensorflow.python.keras.engine import training
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import GlobalAveragePooling2D, Dropout, add, BatchNormalization, Conv2D, Concatenate, Lambda, Input, Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
 
+def get_weights_home():
+	return str(os.getenv('weights', default=Path.home()))
+
 def CheckAll():
 	VGGurl = 'https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5'
 	ArcFaceurl = 'https://github.com/serengil/deepface_models/releases/download/v1.0/arcface_weights.h5'
 	Faceneturl ='https://github.com/serengil/deepface_models/releases/download/v1.0/facenet_weights.h5'
-	face = 'weights/facenet_weights.h5'
-	arc = 'weights/arcface_weights.h5'
-	vgg = 'weights/vgg_face_weights.h5'
+
+	home = get_weights_home()
+	
+	face = home +'/weights/facenet_weights.h5'
+	arc = home +'/weights/arcface_weights.h5'
+	vgg = home +'/weights/vgg_face_weights.h5'
 	if os.path.isfile(face) != True:
 		print("facenet_weights.h5 will be downloaded...")
 
@@ -546,25 +552,28 @@ def InceptionResNetV2(dimension = 128):
 
 def loadFacenetModel():
 	model = InceptionResNetV2()
-
-	model.load_weights('facenet_weights.h5')
+	home = get_weights_home()
+	filename = home +'/facenet_weights.h5'
+	model.load_weights(filename)
 
 	return model
 
 def loadArcModel():
-    base_model = ResNet34()
-    inputs = base_model.inputs[0]
-    arcface_model = base_model.outputs[0]
-    arcface_model = keras.layers.BatchNormalization(momentum=0.9, epsilon=2e-5)(arcface_model)
-    arcface_model = keras.layers.Dropout(0.4)(arcface_model)
-    arcface_model = keras.layers.Flatten()(arcface_model)
-    arcface_model = keras.layers.Dense(512, activation=None, use_bias=True, kernel_initializer="glorot_normal")(arcface_model)
-    embedding = keras.layers.BatchNormalization(momentum=0.9, epsilon=2e-5, name="embedding", scale=True)(arcface_model)
-    model = keras.models.Model(inputs, embedding, name=base_model.name)
+	base_model = ResNet34()
+	inputs = base_model.inputs[0]
+	arcface_model = base_model.outputs[0]
+	arcface_model = keras.layers.BatchNormalization(momentum=0.9, epsilon=2e-5)(arcface_model)
+	arcface_model = keras.layers.Dropout(0.4)(arcface_model)
+	arcface_model = keras.layers.Flatten()(arcface_model)
+	arcface_model = keras.layers.Dense(512, activation=None, use_bias=True, kernel_initializer="glorot_normal")(arcface_model)
+	embedding = keras.layers.BatchNormalization(momentum=0.9, epsilon=2e-5, name="embedding", scale=True)(arcface_model)
+	model = keras.models.Model(inputs, embedding, name=base_model.name)
+	
+	home = get_weights_home()
+	filename = home +'/arcface_weights.h5'
+	model.load_weights(filename)
 
-    model.load_weights('arcface_weights.h5')
-
-    return model
+	return model
 
 def ResNet34():
 
@@ -662,11 +671,11 @@ def baseVGG():
     return model
 
 def loadVGGModel():
+	model = baseVGG()
+	home = get_weights_home()
+	filename = home +'/weights/vgg_face_weights.h5'
+	model.load_weights(filename)
 
-    model = baseVGG()
-    
-    model.load_weights('vgg_face_weights.h5')
+	vgg_face_descriptor = Model(inputs= model.layers[0].input, outputs= model.layers[-2].output)
 
-    vgg_face_descriptor = Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
-
-    return vgg_face_descriptor
+	return vgg_face_descriptor
