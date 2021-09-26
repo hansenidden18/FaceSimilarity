@@ -3,7 +3,7 @@
 In this project i try to create a ***face verification*** program which recognize and cerify people faces, by using deepface library and face_recognition library. On the first program I used deep learning approach to verified the faces. And for the second program I used simple linear algebra equation which include on face_recognition library to verify the faces. The only issues that I facing was memory consumption on the deep learning program was quite big, so i need to clear my opened programs before runnning it. In the next step I will try to optimize my model and algorithm, so it can run in all device without lagging.
 
 Live Demo for the Deep Learning approach is in this [link](https://youtu.be/u_zLsUfyZqI).
-
+Live Demo for the Face Recogniition library is in this [link](https://youtu.be/g_IHgVfODFM).
 
 ### [**FaceSimilarity**](https://github.com/hansenidden18/FaceSimilarity/blob/main/FaceSimilarity.py)
 
