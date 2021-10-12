@@ -3,12 +3,20 @@ import os
 from . import helpers
 
 class Recognizer:
-    def __init__(self, faces_dirname):
+    def __init__(self):
+        self.known_face_encodings = list()
+        self.known_face_names = list()
+
+    def get_known_face_encodings(self, faces_dirname, userid):
         result = dict()
         home_path = helpers.get_home_path()
         faces_dirpath = helpers.get_path(home_path, faces_dirname)
+        userface_dirpath = helpers.get_path(faces_dirpath, userid)
 
-        for dirpath, dirnames, filenames in os.walk(faces_dirpath):
+        if os.path.isdir(userface_dirpath) == False:
+            raise OSError("user does not exist")
+
+        for dirpath, dirnames, filenames in os.walk(userface_dirpath):
             for filename in filenames:
                 filepath = helpers.get_path(dirpath, filename)
 
@@ -18,8 +26,12 @@ class Recognizer:
 
         self.known_face_encodings = list(result.values())
         self.known_face_names = list(result.keys())
+        return
 
     def get_face_names(self, frame, face_locations):
         face_encodings = face_recognition.face_encodings(frame, face_locations)
-        face_names = helpers.get_face_name(face_encodings, self.known_face_encodings, self.known_face_names)
+        face_names = list()
+        for face_encoding in face_encodings:
+            face_name = helpers.get_face_name(self.known_face_encodings, self.known_face_names, face_encoding)
+            face_names.append(face_name)
         return face_names

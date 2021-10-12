@@ -1,8 +1,17 @@
 import cv2
 import constants
 
+def restore_scale(top, right, bottom, left):
+    top *= int(1 / constants.FY)
+    right *= int(1 / constants.FX)
+    bottom *= int(1 / constants.FY)
+    left *= int(1 / constants.FX)
+    return (top, right, bottom, left)
+
 def mark_faces(frame, face_locations, face_names):
     for (top, right, bottom, left), name in zip(face_locations, face_names):
+        (top, right, bottom, left) = restore_scale(top, right, bottom, left)
+
         cv2.rectangle(
             img=frame,
             pt1=(left - constants.LEFT_OFFSET, top - constants.TOP_OFFSET),
@@ -23,3 +32,15 @@ def mark_faces(frame, face_locations, face_names):
             thickness=1
         )
     return
+
+def preprocess(frame):
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    preprocessed_frame = cv2.resize(
+        src=rgb_frame,
+        dsize=(0, 0),
+        fx=constants.FX,
+        fy=constants.FY
+    )
+    
+    return preprocessed_frame

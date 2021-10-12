@@ -9,10 +9,10 @@ def recognize_face(face_detector, face_recognizer):
     while True:
         ret, frame = video_capture.read()
 
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        preprocessed_frame = utility.preprocess(frame)
         
-        face_locations = face_detector.get_face_locations(rgb_frame, 1, "hog")
-        face_names = face_recognizer.get_face_names(rgb_frame, face_locations)
+        face_locations = face_detector.get_face_locations(preprocessed_frame, 1, "hog")
+        face_names = face_recognizer.get_face_names(preprocessed_frame, face_locations)
         utility.mark_faces(frame, face_locations, face_names)
 
         cv2.imshow('Video', frame)
@@ -24,8 +24,15 @@ def recognize_face(face_detector, face_recognizer):
     cv2.destroyAllWindows()
 
 def main():
-    face_recognizer = recognizer.Recognizer(faces_dirname="pictures")
+    face_recognizer = recognizer.Recognizer()
+    
+    try:
+        face_recognizer.get_known_face_encodings(faces_dirname="pictures", userid="05111940000075")
+    except OSError as err:
+        print("".join(["INFO: ", str(err)]))
+
     face_detector = detector.Detector()
+
     recognize_face(face_detector, face_recognizer)
 
 if __name__ == "__main__":
