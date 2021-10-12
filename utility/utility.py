@@ -1,5 +1,6 @@
 import cv2
 import constants
+import logging
 
 def restore_scale(top, right, bottom, left):
     top *= int(1 / constants.FY)
@@ -44,3 +45,12 @@ def preprocess(frame):
     )
     
     return preprocessed_frame
+
+def get_log_message(face_locations, face_names):
+    labels = ", ".join(face_names)
+    unit = "face"
+    if len(face_locations) > 1:
+        unit = "faces"
+    message = "".join(["Found ", str(len(face_locations)), " ", unit, ":", labels])
+    return message
+    

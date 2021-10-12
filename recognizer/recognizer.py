@@ -14,7 +14,7 @@ class Recognizer:
         userface_dirpath = helpers.get_path(faces_dirpath, userid)
 
         if os.path.isdir(userface_dirpath) == False:
-            raise OSError("user does not exist")
+            raise OSError("User does not exist")
 
         for dirpath, dirnames, filenames in os.walk(userface_dirpath):
             for filename in filenames:
