@@ -1,6 +1,5 @@
 import cv2
 import constants
-import logging
 
 def restore_scale(top, right, bottom, left):
     top *= int(1 / constants.FY)

@@ -2,7 +2,6 @@ import cv2
 from recognizer import recognizer
 from detector import detector
 from utility import utility
-import time
 import logging
 
 def identify(face_detector, face_recognizer, frame_count_limit=1, model="hog"):
@@ -12,6 +11,7 @@ def identify(face_detector, face_recognizer, frame_count_limit=1, model="hog"):
     :param face_detector: Detector object
     :param face_recognizer: Recognizer object
     :param frame_count_limit: proccess only the `frame_count_limit`th frame
+    :param model: model used for face detection
     """
     video_capture = cv2.VideoCapture(0)
 
