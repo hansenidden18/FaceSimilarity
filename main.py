@@ -1,24 +1,28 @@
 import cv2
+import logging
 from recognizer import recognizer
 from detector import detector
 from utility import utility
-import logging
 
-def identify(face_detector, face_recognizer, frame_count_limit=1, model="hog"):
+def identify(face_detector, face_recognizer, frame_count_limit=1):
     """
     Start identifying faces in video
 
     :param face_detector: Detector object
     :param face_recognizer: Recognizer object
     :param frame_count_limit: proccess only the `frame_count_limit`th frame
-    :param model: model used for face detection
     """
     video_capture = cv2.VideoCapture(0)
 
     frame_count = 1
+    prev_frame_time = 0
+    new_frame_time = 0
 
     while True:
         ret, frame = video_capture.read()
+
+        if not ret:
+            break
 
         preprocessed_frame = utility.preprocess(frame)
         
@@ -30,6 +34,7 @@ def identify(face_detector, face_recognizer, frame_count_limit=1, model="hog"):
             frame_count = 1
 
         frame_count += 1
+        prev_frame_time, new_frame_time = utility.draw_fps(frame, prev_frame_time, new_frame_time)
 
         cv2.imshow('Video', frame)
 
@@ -55,7 +60,7 @@ def main():
             # userid = input("Enter your NIM: ")
             # time.sleep(10)
             continue
-        logging.info("User exists")
+        # logging.info("User exists")
         break
 
     face_detector = detector.Detector(model="cnn")

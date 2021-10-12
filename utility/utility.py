@@ -1,5 +1,6 @@
 import cv2
 import constants
+import time
 
 def restore_scale(top, right, bottom, left):
     top *= int(1 / constants.FY)
@@ -52,4 +53,22 @@ def get_log_message(face_locations, face_names):
         unit = "faces"
     message = "".join(["Found ", str(len(face_locations)), " ", unit, ":", labels])
     return message
+
+def draw_fps(frame, prev_frame_time, new_frame_time):
+    new_frame_time = time.time()
+    fps = int(1 / (new_frame_time - prev_frame_time))
+    fps_text = str(fps)
+
+    (text_width, text_height), base_line = cv2.getTextSize(text=fps_text, fontFace=constants.DEFAULT_FONT, fontScale=1, thickness=1)
+
+    cv2.putText(
+        img=frame,
+        text=fps_text,
+        org=(0, text_height),
+        fontFace=constants.DEFAULT_FONT,
+        fontScale=1.0,
+        color=(0, 255, 0),
+        thickness=1
+    )
     
+    return new_frame_time, new_frame_time
