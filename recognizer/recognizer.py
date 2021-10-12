@@ -1,7 +1,5 @@
 import face_recognition
-import numpy as np
 import os
-import constants
 from . import helpers
 
 class Recognizer:

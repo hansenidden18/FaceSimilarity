@@ -1,7 +1,6 @@
 import face_recognition
 import os
 import constants
-import numpy as np
 from PIL import Image
 
 def is_image(filepath):
