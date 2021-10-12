@@ -7,11 +7,11 @@ class Recognizer:
         self.known_face_encodings = list()
         self.known_face_names = list()
 
-    def get_known_face_encodings(self, faces_dirname, userid):
+    def get_known_face_encodings(self, faces_dirname, faces_subdirname):
         result = dict()
         home_path = helpers.get_home_path()
         faces_dirpath = helpers.get_path(home_path, faces_dirname)
-        userface_dirpath = helpers.get_path(faces_dirpath, userid)
+        userface_dirpath = helpers.get_path(faces_dirpath, faces_subdirname)
 
         if os.path.isdir(userface_dirpath) == False:
             raise OSError("User does not exist")

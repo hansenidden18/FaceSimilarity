@@ -46,12 +46,9 @@ def preprocess(frame):
     
     return preprocessed_frame
 
-def get_log_message(face_locations, face_names):
+def get_log_message(face_locations, model_name, face_names):
     labels = ", ".join(face_names)
-    unit = "face"
-    if len(face_locations) > 1:
-        unit = "faces"
-    message = "".join(["Found ", str(len(face_locations)), " ", unit, ":", labels])
+    message = "".join([model_name, ":", str(len(face_locations)), ":", labels])
     return message
 
 def draw_fps(frame, prev_frame_time, new_frame_time):
