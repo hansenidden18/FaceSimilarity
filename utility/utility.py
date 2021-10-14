@@ -34,21 +34,25 @@ def mark_faces(frame, face_locations, face_names):
         )
     return
 
-def preprocess(frame):
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+def bgr_to_rgb(frame):
+    return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    preprocessed_frame = cv2.resize(
-        src=rgb_frame,
+def resize(frame):
+    return cv2.resize(
+        src=frame,
         dsize=(0, 0),
         fx=constants.FX,
         fy=constants.FY
     )
-    
-    return preprocessed_frame
+
+def preprocess(frame):
+    rgb_frame = bgr_to_rgb(frame)
+    resized_frame = resize(rgb_frame)
+    return resized_frame
 
 def get_log_message(face_locations, model_name, face_names):
     labels = ", ".join(face_names)
-    message = "".join([model_name, ":", str(len(face_locations)), ":", labels])
+    message = ":".join([model_name, str(len(face_locations)), labels])
     return message
 
 def draw_fps(frame, prev_frame_time, new_frame_time):

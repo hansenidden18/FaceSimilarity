@@ -47,6 +47,7 @@ def identify(face_detector, face_recognizer, frame_count_limit=1):
 
 def main():
     face_recognizer = recognizer.Recognizer()
+    face_detector = detector.Detector(upsample=0, model="cnn")
 
     logging.basicConfig(level=logging.INFO)
     faces_subdirname = ""
@@ -63,9 +64,7 @@ def main():
         # logging.info("User exists")
         break
 
-    face_detector = detector.Detector(model="cnn")
-
-    identify(face_detector, face_recognizer, frame_count_limit=30)
+    identify(face_detector, face_recognizer, frame_count_limit=90)
 
 if __name__ == "__main__":
     main()
